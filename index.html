@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClinConnect — Healthcare jobs & internships</title>
+  <meta name="description" content="Find verified healthcare roles, internships and clinical opportunities on ClinConnect.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- SPA redirect script for GitHub Pages -->
+  <script>
+    // Single Page Apps for GitHub Pages
+    // https://github.com/rafgraph/spa-github-pages
+    // This script checks to see if a redirect is present in the query string
+    // and converts it back into the correct url and adds it to the browser's history.
+    (function(l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function(v) {
+          var a = v.split('=');
+          q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+        });
+        // Check if we have a path to redirect to (format: ?path/to/page&query=value)
+        var keys = Object.keys(q);
+        if (keys.length > 0) {
+          // The first key-value pair is the path if there's no 'p' key
+          var pathPart = keys[0];
+          var queryPart = keys.length > 1 ? keys.slice(1).map(function(k) { return k + '=' + q[k]; }).join('&') : '';
+          // If the path part has no value, it's the path itself
+          var finalPath = q[pathPart] ? pathPart + '=' + q[pathPart] : pathPart.replace(/~and~/g, '&');
+          window.history.replaceState(null, null,
+            l.pathname + (finalPath && finalPath !== '/' ? finalPath : '') +
+            (queryPart ? '?' + queryPart : '') +
+            l.hash
+          );
+        }
+      }
+    }(window.location));
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/client-entry.tsx"></script>
+</body>
+</html>

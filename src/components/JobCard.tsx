@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { Job } from "@/lib/airtable.functions";
+import type { Job } from "@/lib/jobs";
 import { MapPin, Building2, CalendarDays, BadgeCheck } from "lucide-react";
 
 function formatDate(iso: string) {
