@@ -9,14 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PostJobRouteImport } from './routes/post-job'
 import { Route as JobsRouteImport } from './routes/jobs'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as JobsIdRouteImport } from './routes/jobs.$id'
 
+const PostJobRoute = PostJobRouteImport.update({
+  id: '/post-job',
+  path: '/post-job',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JobsRoute = JobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,42 +55,90 @@ const JobsIdRoute = JobsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/post-job': typeof PostJobRoute
   '/jobs/$id': typeof JobsIdRoute
   '/jobs/': typeof JobsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/post-job': typeof PostJobRoute
   '/jobs/$id': typeof JobsIdRoute
   '/jobs': typeof JobsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/post-job': typeof PostJobRoute
   '/jobs/$id': typeof JobsIdRoute
   '/jobs/': typeof JobsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/jobs' | '/jobs/$id' | '/jobs/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/disclaimer'
+    | '/jobs'
+    | '/post-job'
+    | '/jobs/$id'
+    | '/jobs/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/jobs/$id' | '/jobs'
-  id: '__root__' | '/' | '/jobs' | '/jobs/$id' | '/jobs/'
+  to: '/' | '/about' | '/disclaimer' | '/post-job' | '/jobs/$id' | '/jobs'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/disclaimer'
+    | '/jobs'
+    | '/post-job'
+    | '/jobs/$id'
+    | '/jobs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   JobsRoute: typeof JobsRouteWithChildren
+  PostJobRoute: typeof PostJobRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/post-job': {
+      id: '/post-job'
+      path: '/post-job'
+      fullPath: '/post-job'
+      preLoaderRoute: typeof PostJobRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jobs': {
       id: '/jobs'
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof JobsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -113,7 +179,10 @@ const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  DisclaimerRoute: DisclaimerRoute,
   JobsRoute: JobsRouteWithChildren,
+  PostJobRoute: PostJobRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

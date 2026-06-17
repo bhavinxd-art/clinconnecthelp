@@ -108,7 +108,9 @@ function Header() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           <Link to="/" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeOptions={{ exact: true }} activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>Home</Link>
-          <Link to="/jobs" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>Browse jobs</Link>
+          <Link to="/jobs" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>Jobs</Link>
+          <Link to="/about" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>About</Link>
+          <Link to="/post-job" className="ml-1 rounded-md bg-primary px-3 py-2 text-primary-foreground hover:opacity-90">Post a job</Link>
         </nav>
       </div>
     </header>
@@ -118,8 +120,14 @@ function Header() {
 function Footer() {
   return (
     <footer className="mt-20 border-t border-border/60">
-      <div className="mx-auto max-w-6xl px-5 py-8 text-sm text-muted-foreground">
-        © {new Date().getFullYear()} ClinConnect. Verified healthcare opportunities.
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <span>© {new Date().getFullYear()} ClinConnect. Verified healthcare opportunities.</span>
+        <nav className="flex flex-wrap gap-4">
+          <Link to="/about" className="hover:text-foreground">About</Link>
+          <Link to="/post-job" className="hover:text-foreground">Post a job</Link>
+          <Link to="/disclaimer" className="hover:text-foreground">Disclaimer</Link>
+          <a href="mailto:clinconnecthelp@gmail.com" className="hover:text-foreground">Contact</a>
+        </nav>
       </div>
     </footer>
   );
