@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import logoAsset from "../assets/clinconnect-logo.png.asset.json";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -100,71 +99,35 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function Header() {
-  const navLink = "rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary";
-  const activeNav = { className: "rounded-md px-3 py-2 text-sm font-semibold text-primary border-b-2 border-primary" };
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logoAsset.url} alt="ClinConnect" className="h-9 w-auto" />
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground font-display font-bold">C</span>
+          <span className="font-display text-lg font-bold tracking-tight">ClinConnect</span>
         </Link>
-        <nav className="hidden items-center gap-2 md:flex">
-          <Link to="/" className={navLink} activeOptions={{ exact: true }} activeProps={activeNav}>Home</Link>
-          <Link to="/jobs" className={navLink} activeProps={activeNav}>Browse Jobs</Link>
-          <Link to="/about" className={navLink} activeProps={activeNav}>About</Link>
-          <a href="mailto:clinconnecthelp@gmail.com" className={navLink}>Contact</a>
+        <nav className="flex items-center gap-1 text-sm">
+          <Link to="/" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeOptions={{ exact: true }} activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>Home</Link>
+          <Link to="/jobs" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>Jobs</Link>
+          <Link to="/about" className="rounded-md px-3 py-2 text-muted-foreground hover:bg-secondary hover:text-foreground" activeProps={{ className: "rounded-md px-3 py-2 text-foreground bg-secondary" }}>About</Link>
+          <Link to="/post-job" className="ml-1 rounded-md bg-primary px-3 py-2 text-primary-foreground hover:opacity-90">Post a job</Link>
         </nav>
-        <Link
-          to="/jobs"
-          className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90"
-        >
-          Find Jobs
-        </Link>
       </div>
     </header>
   );
 }
 
 function Footer() {
-  const linkCls = "block text-sm text-white/70 hover:text-white transition";
   return (
-    <footer className="mt-0 bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-6xl px-5 py-16">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <img src={logoAsset.url} alt="ClinConnect" className="h-9 w-auto brightness-0 invert" />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
-              India's dedicated clinical research job platform for pharmacy and life sciences students.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-display text-base font-bold">For Students</h4>
-            <div className="mt-5 space-y-3">
-              <Link to="/jobs" className={linkCls}>Browse Jobs</Link>
-              <Link to="/jobs" className={linkCls}>Job Categories</Link>
-              <Link to="/about" className={linkCls}>Career Guide</Link>
-            </div>
-          </div>
-          <div>
-            <h4 className="font-display text-base font-bold">For Recruiters</h4>
-            <div className="mt-5 space-y-3">
-              <Link to="/post-job" className={linkCls}>Post a Job</Link>
-              <Link to="/post-job" className={linkCls}>Pricing</Link>
-              <a href="mailto:clinconnecthelp@gmail.com" className={linkCls}>Contact Us</a>
-            </div>
-          </div>
-          <div>
-            <h4 className="font-display text-base font-bold">Legal</h4>
-            <div className="mt-5 space-y-3">
-              <Link to="/disclaimer" className={linkCls}>Disclaimer</Link>
-              <Link to="/disclaimer" className={linkCls}>Terms of Use</Link>
-              <Link to="/disclaimer" className={linkCls}>Privacy Policy</Link>
-            </div>
-          </div>
-        </div>
-        <div className="mt-14 border-t border-white/10 pt-6 text-xs text-white/60">
-          © {new Date().getFullYear()} ClinConnect. All rights reserved.
-        </div>
+    <footer className="mt-20 border-t border-border/60">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <span>© {new Date().getFullYear()} ClinConnect. Verified healthcare opportunities.</span>
+        <nav className="flex flex-wrap gap-4">
+          <Link to="/about" className="hover:text-foreground">About</Link>
+          <Link to="/post-job" className="hover:text-foreground">Post a job</Link>
+          <Link to="/disclaimer" className="hover:text-foreground">Disclaimer</Link>
+          <a href="mailto:clinconnecthelp@gmail.com" className="hover:text-foreground">Contact</a>
+        </nav>
       </div>
     </footer>
   );

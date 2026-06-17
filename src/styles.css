@@ -24,7 +24,6 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent-soft: var(--accent-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -37,30 +36,27 @@
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(1 0 0);
-  --surface: oklch(0.985 0.005 230);
-  --foreground: oklch(0.22 0.06 260);
+  --background: oklch(0.99 0.005 220);
+  --surface: oklch(0.97 0.012 210);
+  --foreground: oklch(0.22 0.04 240);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.06 260);
+  --card-foreground: oklch(0.22 0.04 240);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.06 260);
-  /* Navy from logo */
-  --primary: oklch(0.27 0.09 262);
-  --primary-foreground: oklch(0.99 0 0);
-  --primary-soft: oklch(0.95 0.025 255);
-  --secondary: oklch(0.96 0.012 230);
-  --secondary-foreground: oklch(0.27 0.09 262);
-  --muted: oklch(0.97 0.008 230);
-  --muted-foreground: oklch(0.5 0.025 250);
-  /* Emerald from logo */
-  --accent: oklch(0.58 0.12 165);
-  --accent-foreground: oklch(0.99 0 0);
-  --accent-soft: oklch(0.95 0.04 165);
+  --popover-foreground: oklch(0.22 0.04 240);
+  --primary: oklch(0.55 0.11 200);
+  --primary-foreground: oklch(0.99 0.005 220);
+  --primary-soft: oklch(0.94 0.04 200);
+  --secondary: oklch(0.95 0.02 220);
+  --secondary-foreground: oklch(0.3 0.05 240);
+  --muted: oklch(0.96 0.01 220);
+  --muted-foreground: oklch(0.5 0.03 240);
+  --accent: oklch(0.7 0.13 165);
+  --accent-foreground: oklch(0.15 0.03 240);
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.01 230);
-  --input: oklch(0.93 0.012 230);
-  --ring: oklch(0.27 0.09 262);
+  --border: oklch(0.91 0.015 220);
+  --input: oklch(0.93 0.015 220);
+  --ring: oklch(0.55 0.11 200);
 }
 
 @layer base {
@@ -70,5 +66,8 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    background-image:
+      radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent),
+      radial-gradient(900px 500px at -10% 10%, color-mix(in oklab, var(--color-accent) 8%, transparent), transparent);
   }
 }
