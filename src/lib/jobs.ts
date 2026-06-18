@@ -1,9 +1,9 @@
 // Static client-side Airtable fetcher.
 // Requires three Vite env vars (set in .env locally and as GitHub Actions
 // build-time secrets when deploying to GitHub Pages):
-//   VITE_AIRTABLE_TOKEN     – Personal Access Token, scope: data.records:read, this base only
-//   VITE_AIRTABLE_BASE_ID   – e.g. appXXXXXXXXXXXXXX
-//   VITE_AIRTABLE_TABLE     – table name or id (e.g. "Jobs")
+//   VITE_AIRTABLE_TOKEN     - Personal Access Token, scope: data.records:read, this base only
+//   VITE_AIRTABLE_BASE_ID   - e.g. appXXXXXXXXXXXXXX
+//   VITE_AIRTABLE_TABLE     - table name or id (e.g. "Jobs")
 //
 // SECURITY NOTE: The token ships in the built JS bundle and is readable by
 // anyone who visits the site. Always use a read-only PAT scoped to this base.
@@ -74,18 +74,39 @@ function pick(fields: Record<string, unknown>, keys: string[]): unknown {
 
 function mapRecord(rec: AirtableRecord): Job {
   const f = rec.fields;
+
   return {
     id: rec.id,
-    title: str(pick(f, ["Title", "title", "Job Title"])),
-    company: str(pick(f, ["Company", "company", "Organization"])),
+    title: str(pick(f, ["Role", "Title", "title", "Job Title"])),
+    company: str(pick(f, ["Organization", "Company", "company"])),
     location: str(pick(f, ["Location", "location"])),
     category: str(pick(f, ["Category", "category", "Type"])),
     stipend: nullable(pick(f, ["Stipend", "stipend", "Salary", "Compensation"])),
     eligibility: nullable(pick(f, ["Eligibility", "eligibility", "Requirements"])),
-    applyUrl: str(pick(f, ["Apply URL", "ApplyURL", "applyUrl", "Apply Link", "Link", "URL"])),
-    postedDate: str(pick(f, ["Posted Date", "PostedDate", "postedDate", "Posted", "Date"])) || rec.createdTime,
+    applyUrl: str(
+      pick(f, [
+        "Contact / Link",
+        "Apply URL",
+        "ApplyURL",
+        "applyUrl",
+        "Apply Link",
+        "Link",
+        "URL",
+      ])
+    ),
+    postedDate:
+      str(
+        pick(f, [
+          "Date posted",
+          "Posted Date",
+          "PostedDate",
+          "postedDate",
+          "Posted",
+          "Date",
+        ])
+      ) || rec.createdTime,
     verified: bool(pick(f, ["Verified", "verified"])),
-    active: pick(f, ["Active", "active"]) === undefined ? true : bool(pick(f, ["Active", "active"])),
+    active: true,
     source: nullable(pick(f, ["Source", "source"])),
   };
 }
@@ -134,16 +155,28 @@ function parseCsv(text: string): Record<string, string>[] {
 
 function mapCsvRow(row: Record<string, string>, index: number): Job {
   const id = str(pick(row, ["id", "ID", "Record ID"])) || `csv-${index}`;
-  const postedDate = str(pick(row, ["Posted Date", "PostedDate", "postedDate", "Posted", "Date"]));
+  const postedDate = str(
+    pick(row, ["Date posted", "Posted Date", "PostedDate", "postedDate", "Posted", "Date"])
+  );
   return {
     id,
-    title: str(pick(row, ["Title", "title", "Job Title"])),
-    company: str(pick(row, ["Company", "company", "Organization"])),
+    title: str(pick(row, ["Role", "Title", "title", "Job Title"])),
+    company: str(pick(row, ["Organization", "Company", "company"])),
     location: str(pick(row, ["Location", "location"])),
     category: str(pick(row, ["Category", "category", "Type"])),
     stipend: nullable(pick(row, ["Stipend", "stipend", "Salary", "Compensation"])),
     eligibility: nullable(pick(row, ["Eligibility", "eligibility", "Requirements"])),
-    applyUrl: str(pick(row, ["Apply URL", "ApplyURL", "applyUrl", "Apply Link", "Link", "URL"])),
+    applyUrl: str(
+      pick(row, [
+        "Contact / Link",
+        "Apply URL",
+        "ApplyURL",
+        "applyUrl",
+        "Apply Link",
+        "Link",
+        "URL",
+      ])
+    ),
     postedDate: postedDate || new Date(0).toISOString(),
     verified: bool(pick(row, ["Verified", "verified"])),
     active: pick(row, ["Active", "active"]) === undefined ? true : bool(pick(row, ["Active", "active"])),
@@ -166,6 +199,9 @@ async function fetchCsvJobs(): Promise<Job[]> {
 
 async function fetchAllRecords(): Promise<AirtableRecord[]> {
   assertConfig();
+  console.log("TOKEN EXISTS:", !!TOKEN);
+  console.log("BASE_ID:", BASE_ID);
+  console.log("TABLE:", TABLE);
   const all: AirtableRecord[] = [];
   let offset: string | undefined;
   const base = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}`;
@@ -176,6 +212,7 @@ async function fetchAllRecords(): Promise<AirtableRecord[]> {
     const res = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${TOKEN}` },
     });
+    console.log("STATUS:", res.status);
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new Error(`Airtable request failed (${res.status}): ${text}`);
@@ -184,6 +221,7 @@ async function fetchAllRecords(): Promise<AirtableRecord[]> {
     all.push(...json.records);
     offset = json.offset;
   } while (offset);
+  console.log("AIRTABLE RECORDS:", all);
   return all;
 }
 
