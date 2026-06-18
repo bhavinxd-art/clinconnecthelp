@@ -5,7 +5,6 @@ import {
   createRoute,
   Outlet,
   Link,
-  createHashHistory,
   useSearch,
   useParams,
   useRouter,
@@ -495,7 +494,6 @@ export const queryClient = new QueryClient();
 
 export const router = createRouter({
   routeTree,
-  history: createHashHistory(),
   context: { queryClient },
   scrollRestoration: true,
   defaultPreloadStaleTime: 0,

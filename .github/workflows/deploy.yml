@@ -23,7 +23,6 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Build
         env:
-          VITE_AIRTABLE_CSV_URL: ${{ secrets.VITE_AIRTABLE_CSV_URL }}
           VITE_AIRTABLE_TOKEN: ${{ secrets.VITE_AIRTABLE_TOKEN }}
           VITE_AIRTABLE_BASE_ID: ${{ secrets.VITE_AIRTABLE_BASE_ID }}
           VITE_AIRTABLE_TABLE: ${{ secrets.VITE_AIRTABLE_TABLE }}

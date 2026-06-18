@@ -37,13 +37,11 @@ type AirtableResponse = {
 const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN as string | undefined;
 const BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID as string | undefined;
 const TABLE = (import.meta.env.VITE_AIRTABLE_TABLE as string | undefined) ?? "Jobs";
-const CSV_URL = import.meta.env.VITE_AIRTABLE_CSV_URL as string | undefined;
 
 function assertConfig() {
-  if (CSV_URL) return;
   if (!TOKEN || !BASE_ID) {
     throw new Error(
-      "Airtable is not configured. Set VITE_AIRTABLE_CSV_URL or set VITE_AIRTABLE_TOKEN and VITE_AIRTABLE_BASE_ID.",
+      "Airtable is not configured. Set VITE_AIRTABLE_TOKEN and VITE_AIRTABLE_BASE_ID in your environment.",
     );
   }
 }
@@ -90,80 +88,6 @@ function mapRecord(rec: AirtableRecord): Job {
   };
 }
 
-function parseCsv(text: string): Record<string, string>[] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < text.length; i += 1) {
-    const char = text[i];
-    const next = text[i + 1];
-
-    if (char === '"') {
-      if (inQuotes && next === '"') {
-        field += '"';
-        i += 1;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (char === "," && !inQuotes) {
-      row.push(field);
-      field = "";
-    } else if ((char === "\n" || char === "\r") && !inQuotes) {
-      if (char === "\r" && next === "\n") i += 1;
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = "";
-    } else {
-      field += char;
-    }
-  }
-
-  if (field || row.length) {
-    row.push(field);
-    rows.push(row);
-  }
-
-  const headers = rows.shift()?.map((h) => h.trim()) ?? [];
-  return rows
-    .filter((r) => r.some((cell) => cell.trim()))
-    .map((r) => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ""])));
-}
-
-function mapCsvRow(row: Record<string, string>, index: number): Job {
-  const id = str(pick(row, ["id", "ID", "Record ID"])) || `csv-${index}`;
-  const postedDate = str(pick(row, ["Posted Date", "PostedDate", "postedDate", "Posted", "Date"]));
-  return {
-    id,
-    title: str(pick(row, ["Title", "title", "Job Title"])),
-    company: str(pick(row, ["Company", "company", "Organization"])),
-    location: str(pick(row, ["Location", "location"])),
-    category: str(pick(row, ["Category", "category", "Type"])),
-    stipend: nullable(pick(row, ["Stipend", "stipend", "Salary", "Compensation"])),
-    eligibility: nullable(pick(row, ["Eligibility", "eligibility", "Requirements"])),
-    applyUrl: str(pick(row, ["Apply URL", "ApplyURL", "applyUrl", "Apply Link", "Link", "URL"])),
-    postedDate: postedDate || new Date(0).toISOString(),
-    verified: bool(pick(row, ["Verified", "verified"])),
-    active: pick(row, ["Active", "active"]) === undefined ? true : bool(pick(row, ["Active", "active"])),
-    source: nullable(pick(row, ["Source", "source"])),
-  };
-}
-
-async function fetchCsvJobs(): Promise<Job[]> {
-  assertConfig();
-  const res = await fetch(CSV_URL!, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Airtable public view request failed (${res.status})`);
-  }
-  const text = await res.text();
-  return parseCsv(text)
-    .map(mapCsvRow)
-    .filter((j) => j.active && j.title)
-    .sort((a, b) => (b.postedDate || "").localeCompare(a.postedDate || ""));
-}
-
 async function fetchAllRecords(): Promise<AirtableRecord[]> {
   assertConfig();
   const all: AirtableRecord[] = [];
@@ -188,7 +112,6 @@ async function fetchAllRecords(): Promise<AirtableRecord[]> {
 }
 
 export async function fetchJobs(): Promise<Job[]> {
-  if (CSV_URL) return fetchCsvJobs();
   const records = await fetchAllRecords();
   return records
     .map(mapRecord)
@@ -197,11 +120,6 @@ export async function fetchJobs(): Promise<Job[]> {
 }
 
 export async function fetchJobById(id: string): Promise<Job | null> {
-  if (CSV_URL) {
-    const jobs = await fetchCsvJobs();
-    return jobs.find((job) => job.id === id) ?? null;
-  }
-
   assertConfig();
   const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE)}/${id}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
