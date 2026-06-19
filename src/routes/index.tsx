@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listJobs } from "@/lib/airtable.functions";
 import { JobCard } from "@/components/JobCard";
+import { NewsletterSection } from "@/components/NewsletterSection";
 import { Search, ShieldCheck, Stethoscope, Sparkles } from "lucide-react";
 
 const jobsQuery = queryOptions({
@@ -22,7 +23,9 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { data: jobs } = useSuspenseQuery(jobsQuery);
-  const featured = jobs.filter((j) => j.active !== false).slice(0, 6);
+  const featured = [...jobs]
+    .sort((a, b) => (b.postedDate || "").localeCompare(a.postedDate || ""))
+    .slice(0, 3);
   const stats = {
     total: jobs.length,
     verified: jobs.filter((j) => j.verified).length,
@@ -97,6 +100,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <NewsletterSection />
     </div>
   );
 }
