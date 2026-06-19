@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listJobs } from "@/lib/airtable.functions";
 import { JobCard } from "@/components/JobCard";
+import { NewsletterSection } from "@/components/NewsletterSection";
 import { Search, ShieldCheck, Stethoscope, Sparkles } from "lucide-react";
 
 const jobsQuery = queryOptions({
